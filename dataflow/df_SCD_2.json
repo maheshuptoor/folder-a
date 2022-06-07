@@ -1,0 +1,178 @@
+{
+	"name": "df_SCD_2",
+	"properties": {
+		"folder": {
+			"name": "mini project"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "inputcsv",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "B2BSoursce",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "B2BSoursce",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "B2BSoursce",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "Filteronlymatchedrecords"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          DeliveryMethodID as integer,",
+				"          DeliveryMethodName as string,",
+				"          LastEditedBy as integer,",
+				"          ValidFrom as date,",
+				"          ValidTo as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          surrKey as integer,",
+				"          DeliveryMethodID as integer,",
+				"          DeliveryMethodName as string,",
+				"          LastEditedBy as integer,",
+				"          ValidFrom as date,",
+				"          ValidTo as date,",
+				"          flag as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source1 derive(Flag = 'Y') ~> derivedColumn1",
+				"source2 select(mapColumn(",
+				"          SQL_surrKey = surrKey,",
+				"          SQL_DeliveryMethodID = DeliveryMethodID,",
+				"          SQL_DeliveryMethodName = DeliveryMethodName,",
+				"          SQL_LastEditedBy = LastEditedBy,",
+				"          SQL_ValidFrom = ValidFrom,",
+				"          SQL_ValidTo = ValidTo,",
+				"          SQL_flag = flag",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source1, select1 lookup(DeliveryMethodID == SQL_DeliveryMethodID,",
+				"     multiple: true,",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1 filter(!isNull(SQL_DeliveryMethodID)) ~> Filteronlymatchedrecords",
+				"Filteronlymatchedrecords select(mapColumn(",
+				"          SQL_surrKey,",
+				"          SQL_DeliveryMethodID,",
+				"          SQL_DeliveryMethodName,",
+				"          SQL_LastEditedBy,",
+				"          SQL_ValidFrom,",
+				"          SQL_ValidTo,",
+				"          SQL_flag",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 derive(SQL_flag = 'N') ~> derivedColumn2",
+				"derivedColumn2 alterRow(updateIf(1==1)) ~> alterRow1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          surrKey as integer,",
+				"          DeliveryMethodID as integer,",
+				"          DeliveryMethodName as string,",
+				"          LastEditedBy as integer,",
+				"          ValidFrom as date,",
+				"          ValidTo as date,",
+				"          flag as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 2,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          DeliveryMethodID,",
+				"          DeliveryMethodName,",
+				"          LastEditedBy,",
+				"          ValidFrom,",
+				"          ValidTo,",
+				"          flag = Flag",
+				"     )) ~> sink1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          surrKey as integer,",
+				"          DeliveryMethodID as integer,",
+				"          DeliveryMethodName as string,",
+				"          LastEditedBy as integer,",
+				"          ValidFrom as date,",
+				"          ValidTo as date,",
+				"          flag as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['surrKey'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          surrKey = SQL_surrKey,",
+				"          DeliveryMethodID = SQL_DeliveryMethodID,",
+				"          DeliveryMethodName = SQL_DeliveryMethodName,",
+				"          LastEditedBy = SQL_LastEditedBy,",
+				"          ValidFrom = SQL_ValidFrom,",
+				"          ValidTo = SQL_ValidTo,",
+				"          flag = SQL_flag",
+				"     )) ~> sink2"
+			]
+		}
+	}
+}

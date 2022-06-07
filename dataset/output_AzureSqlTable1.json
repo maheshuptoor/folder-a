@@ -1,0 +1,93 @@
+{
+	"name": "output_AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "project"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "OrderId",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "OrderReceivedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "LPANumber",
+				"type": "varchar"
+			},
+			{
+				"name": "OrderConfirmationNumber",
+				"type": "varchar"
+			},
+			{
+				"name": "OrderType",
+				"type": "varchar"
+			},
+			{
+				"name": "OrderQuantity",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "OrderPriceAmount",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "OrderTotalAmount",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "OrderTaxAmount",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "OrderCurrency",
+				"type": "varchar"
+			},
+			{
+				"name": "CustomerDateOfBirth",
+				"type": "date"
+			},
+			{
+				"name": "DocumentNumber",
+				"type": "varchar"
+			},
+			{
+				"name": "CustomerName",
+				"type": "varchar"
+			},
+			{
+				"name": "CatalogId",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "CompanyCUIT",
+				"type": "bigint",
+				"precision": 19
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Order"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

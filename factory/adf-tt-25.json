@@ -1,0 +1,9 @@
+{
+	"name": "adf-tt-25",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "461eb058-8092-4f00-a8b4-3fe0c8769937",
+		"tenantId": "e94ad81e-d07a-4dd5-a808-2271a395a380"
+	}
+}

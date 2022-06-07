@@ -1,0 +1,19 @@
+{
+	"name": "MetadataDrivenCopyTask_w5k_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_w5k_20220526"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "MainControlTable_w5k"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
